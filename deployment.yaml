@@ -1,0 +1,43 @@
+steps:
+
+  - name: 'gcr.io/cloud-builders/docker'
+
+dir: '.'
+
+args: [
+
+  'build',
+  '-t',
+  'us-docker.pkg.dev/$PROJECT_ID/xxx/cms:$SHORT_SHA',
+  '-f',
+  './Dockerfile',
+  '.'
+
+]
+
+  - name: 'gcr.io/cloud-builders/docker'
+
+args: [
+  'push',
+  'us-docker.pkg.dev/$PROJECT_ID/xxx/cms:$SHORT_SHA'
+]
+
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+
+entrypoint: gcloud
+
+args:
+  - run
+  - deploy
+  - cms
+  - --region=us-central1
+  - --platform=managed
+  - --image=us-docker.pkg.dev/$PROJECT_ID/xxx/cms:$SHORT_SHA
+
+env:
+
+  - 'MONGODB_URI=xxx'
+  - 'PAYLOAD_SECRET=xxx'
+
+timeout: 1800s

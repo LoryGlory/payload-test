@@ -1,0 +1,2 @@
+gcloud auth configure-docker \
+europe-west3-docker.pkg.dev
